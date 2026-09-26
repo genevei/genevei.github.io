@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html><head><title>Primes</title></head><body><canvas id="game" width="570" height="240"></canvas><script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+let start=[2n,3n];
+let select=[];
+let primes=start;
+let nprimes=2;
+let ncomb=0;
+let score=0;
+let page=1;
+let numpage=1;
+function factor(n){
+    const facts=new Set();
+	n=BigInt(n);
+	const two=2n;
+    while (n%two===0n) {
+        facts.add(two);
+        n /= two;
+    }
+	let p=3n;
+    while (p*p<=n){
+        while (n%p==0n){
+            facts.add(p);
+            n/=p;
+        }
+        p+=2n;
+    }
+	if (n>1n){
+	    facts.add(n);
+	}
+    return Array.from(facts);
+}
+function combine(){
+    if (select.length===0) return;
+	let product=select.reduce((a,b)=>a*b,1n);
+	let result=product+1n;
+	facts=factor(result);
+	facts.forEach(p=>{
+	    if(!primes.some(pr=>pr===p)){
+		    primes.push(p);
+			nprimes++;
+	        if (nprimes%32===1){
+	            numpage++;
+	        }
+		}
+	});
+	ncomb++;
+	score=nprimes/ncomb;
+	select=[];
+}
+canvas.addEventListener("click",e=>{
+    let x=e.offsetX;
+	let y=e.offsetY;
+	primpage.forEach((p,i)=>{
+	    let px=10+(i%8)*70;
+		let py=40+Math.floor(i/8)*40;
+		if (x>=px&&x<=px+60&&y>=py&&y<=py+30){
+		    if(!select.includes(p)){
+			    select.push(p);
+			} else {
+			    var rm=select.indexOf(p);
+				select.splice(rm,1);
+			}
+	    }
+	});
+	if (x>=10&&x<=70&&y>=200&&y<=230){
+	   combine();
+	}
+	if (x>=490&&x<=520&&y>=200&&y<=230){
+	   if (page>1){
+	       page--;
+	   }
+	}
+	if (x>=530&&x<=560&&y>=200&&y<=230){
+	   if (page<numpage){
+	       page++;
+	   }
+	}
+});
+canvas.addEventListener("contextmenu",e=>{
+	let x=e.offsetX;
+	let y=e.offsetY;
+	primpage.forEach((p,i)=>{
+	    let px=10+(i%8)*70;
+		let py=40+Math.floor(i/8)*40;
+		if (x>=px&&x<=px+60&&y>=py&&y<=py+30){
+			navigator.clipboard.writeText(p);
+	    }
+	});
+});
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.fillStyle="#000000";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	ctx.fillStyle="#ffffff";
+	ctx.font="20px Helvetica";
+	ctx.fillText("Prime game", 10, 30);
+	primpage=primes.slice(32*(page-1),32*page);
+	primpage.forEach((p,i)=>{
+	    let x=10+(i%8)*70;
+		let y=40+Math.floor(i/8)*40;
+		if (p.toString().length === 8){
+		    ctx.font="12px Helvetica";
+		} else if (p.toString().length === 9){
+		    ctx.font="11px Helvetica";
+		} else if (p.toString().length === 10){ 
+		    ctx.font="10px Helvetica";
+		} else if (p.toString().length === 11){
+		    ctx.font="9px Helvetica";
+		} else if (p.toString().length === 12){
+		    ctx.font="8px Helvetica";
+		} else if (p.toString().length === 13){
+		    ctx.font="7px Helvetica";
+		} else if (p.toString().length >= 14 && p.toString().length < 17){
+		    ctx.font="6px Helvetica";
+		} else if (p.toString().length >= 17){
+		    ctx.font="5px Helvetica";
+		} else {
+		    ctx.font="14px Helvetica";
+		}
+	    ctx.fillStyle=select.some(sp => sp === p) ? "#7f7f7f" : "#ffffff";
+		ctx.fillRect(x,y,60,30);
+		ctx.fillStyle="#000000";
+		ctx.fillText(p,x+5,y+20);
+	});
+	ctx.fillStyle="#007f00";
+	ctx.fillRect(10,200,60,30);
+	ctx.font="14px Helvetica";
+	ctx.fillStyle="#ffffff";
+	ctx.fillText("Combine",13,220);
+	ctx.fillText("Primes: " + nprimes + "   Combinations: " + ncomb + "   Score: " + score.toFixed(2),80,220);
+	ctx.fillText("Page " + page + "/" + numpage,425,220);
+	ctx.fillStyle="#007f00";
+	ctx.fillRect(490,200,30,30);
+	ctx.fillRect(530,200,30,30);
+    ctx.fillStyle="#ffffff";
+	ctx.fillText("<-       ->",498,220);
+	requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body></html>

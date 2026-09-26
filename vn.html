@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head><meta name="LifeViewer" content="viewer textarea limit"><link rel="stylesheet" href="style.css"><title>Findings in 3-state outer-totalistic von Neumann and Hexagonal rules</title></head>
+<h1><i>not finished</i></h1><br>
+<body><script src="lv-1362.js"></script>3-state outer-totalistic rules are an interesting rulespace. Being a superset of the 2-state outer-totalistic rules, they can produce more varied behaviour, and allow for a larger portion of rules to be searched and objects to be discovered. For convenience, the following abbreviations will be used:
+<ul>
+<li>OTVN: outer-totalistic von Neumann</li>
+<li>OTVN3: 3-state outer-totalistic von Neumann</li>
+<li>OTVN2: 2-state outer-totalistic von Neumann</li>
+<li>OTHX3: 3-state outer-totalistic Hexagonal</li>
+</ul>
+<h1>von Neumann</h1>
+This particular rulespace was the first OTVN rulespace I began exploring, starting on October 21st, 2025. These rules are more spaceship-friendly compared to their two-state counterparts, as the only spaceships in OTVN2 rules (there are only 46 of them known in their respective glider database!) can exist only in rules with B0. B1 is required to escape the bounding diamond, but makes all rules hopelessly explosive.
+
+This rulespace <i>was</i> explored before October 21st, as "Roommates", an OTVN3 rule which can be written as <i>OTVN3-001001000000000-002002000000000-002002000000000</i>, dates to August 9th, 2024 at the latest. A 3c/10 diagonal spaceship is known in it:
+<div class="viewer"><textarea class="rle">
+x = 9, y = 9, rule = Roommates
+.ABA3$A3.A$2B3.A$8.A$8.B$4.B3.A$4.BA!
+[[ AUTOSTART TRACK 3/10 -3/10 THUMBLAUNCH THUMBSIZE 2 THUMBZOOM 10 LOOP 60 GPS 20 ]]
+@RULE Roommates
+@TABLE
+n_states:3
+neighborhood:vonNeumann
+symmetries:permute
+var a = {0,1,2}
+var b = a
+var c = a
+var d = a
+var e = a
+0,1,1,0,0,1
+0,2,0,0,0,1
+1,1,1,0,0,2
+1,2,0,0,0,2
+2,1,0,0,0,2
+2,1,1,0,0,2
+2,2,0,0,0,2
+a,b,c,d,e,0
+</textarea><canvas></canvas></div>

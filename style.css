@@ -1,0 +1,17 @@
+body{
+	background-color:#000000;
+	color:#FFFFFF;
+	font-family:sans-serif
+}
+.center{
+	text-align:center
+}
+a{
+	color:#FFFFFF
+}
+li{
+	color:#FFFFFF
+}
+.rle{
+    display:none
+}
