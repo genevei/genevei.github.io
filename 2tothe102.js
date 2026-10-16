@@ -154,8 +154,8 @@ canvas.addEventListener("click",function(e){
 		}
 		if (mousex>=685&&mousex<=735&&mousey>=313&&mousey<=343){
 			const p=prompt("Insert rule integer");
-			let rj=BigInt(p);
-			if (rj>=5070602400912917605986812821504n || rj<=0n){
+			rs=BigInt(p);
+			if (rs>=5070602400912917605986812821504n || rs<=0n){
 				alert("Invalid rule");
 			}
 		}
