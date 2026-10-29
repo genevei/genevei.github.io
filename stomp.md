@@ -1,6 +1,6 @@
 20:42 2026/10/28
 # Stomp: bulk glider synthesis, made easy
-The same tool used to bring down the numbers of unsynthesised 23-bit still lifes and *all* unsynthesised natural still lifes to staggeringly low number has been available for quite a long time now, but have you ever wondered how to use it and do all sorts of amazing things with it yourself? Well, you're in luck!
+The numbers of unsynthesised 23-bit still lifes and *all* unsynthesised natural still lifes have been brought down to staggeringly low numbers using a tool that has been available for a long time, but have you ever wondered how you could pull such feats off yourself? Well, you're in luck!
 ## Requisites
 * Cygwin / WSL (steps have been tested for Cygwin)
 * git and Clang++
