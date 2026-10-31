@@ -5,9 +5,7 @@ import datetime
 import asyncio
 intents = discord.Intents.default()
 intents.message_content = True
-intents.members = True
-bot = commands.Bot(command_prefix='!', intents=intents, status=discord.Status.idle, help_command=None)
-s=False
+bot = commands.Bot(command_prefix='%', intents=intents, status=discord.Status.idle, help_command=None)
 n={}
 async def save():
     with open("data.json","w+") as f:
@@ -18,13 +16,11 @@ def load():
 @tasks.loop(seconds=60)
 async def check():
     now=datetime.datetime.now(datetime.timezone.utc)
-    mid=datetime.datetime.strptime(n["curr"][0],"%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)+datetime.timedelta(days=3)
+    mid=datetime.datetime.strptime(n["curr"][0],"%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)+datetime.timedelta(days=4)
     if now >= mid and n["vote"]==1:
         winners=await endvote(bot.get_channel(1416513676525043786))
         n["vote"]=0
         n["prev"][f"{n['prefix']} {n['prefixn']}"]=[winners,n["curr"][0],n["curr"][1]]
-        n["curr"][0] = (mid+datetime.timedelta(days=10)).strftime("%Y-%m-%d")
-        n["curr"][1] = (mid+datetime.timedelta(days=23)).strftime("%Y-%m-%d")
         n["noms"]={}
         n["votes"]={}
         n["voters"]={}
@@ -37,33 +33,50 @@ async def check():
             n["currr"]=", ".join(winners[:-1]) + ", and " + winners[-1] 
         await save()
     elif now <= mid and n["vote"]==0:
+        n["curr"][0] = (mid+datetime.timedelta(days=11)).strftime("%Y-%m-%d")
+        n["curr"][1] = (mid+datetime.timedelta(days=24)).strftime("%Y-%m-%d")
         n["vote"]=1
         await bot.get_channel(1416513676525043786).send(f"Voting for {n['prefix']} {n['prefixn']} has begun!")
         await save()
+async def checknom(uid):
+    if list(n["noms"].values()).count(uid)==3:
+        return False
+    else:
+        return True
 @bot.command()
 async def nom(ctx,rule:str):
     uid=ctx.author.id
+    f=await checknom(uid)
     if n["vote"]==1:
-        if not rule in n["noms"]:
-            n["noms"][rule]=uid
-            n["votes"][rule]=0
-            n["voters"][rule]=[]
-            await save()
+        if f:
+            if not rule in n["noms"]:
+                n["noms"][rule]=uid
+                n["votes"][rule]=0
+                n["voters"][rule]=[uid]
+                await save()
+                await ctx.send(f"Rule ``{rule}`` nominated.")
+            else:
+                await ctx.send("Rule already nominated.")
         else:
-            await ctx.send("Rule already nominated.")
+            await ctx.send("Three nominations per user.")
     else:
         await ctx.send("Voting is over.")
 @bot.command()
 async def nomvote(ctx,rule:str):
     uid=ctx.author.id
+    f=await checknom(uid)
     if n["vote"]==1:
-        if not rule in n["noms"]:
-            n["noms"][rule]=uid
-            n["votes"][rule]=1
-            n["voters"][rule]=[]
-            await save()
+        if f:
+            if not rule in n["noms"]:
+                n["noms"][rule]=uid
+                n["votes"][rule]=1
+                n["voters"][rule]=[uid]
+                await ctx.send(f"Rule ``{rule}`` nominated and voted for.")
+                await save()
+            else:
+                await ctx.send("Rule already nominated.")
         else:
-            await ctx.send("Rule already nominated.")
+            await ctx.send("Three nominations per user.")
     else:
         await ctx.send("Voting is over.")
 @bot.command()
@@ -157,7 +170,7 @@ n=load()
 @bot.event
 async def on_ready():
     print(f"{bot.user} running")
-    global s
+    s=False
     if not s:
         s=True
         now=datetime.datetime.utcnow()
