@@ -153,18 +153,26 @@ function pickobjs(diff){
 	let obj2="";
 	let obj1c="";
 	let obj2c="";
+	let equ=0;
 	do {
 		let range=Math.round(max*diff)*Math.random();
 	    filt=objs.filter(i=>i[1]>=range&&i[1]<=max);
-		if (filt.length===0||filt.length===1){continue;}
+		if (filt.length==0||filt.length==1){continue;}
 		let evil=filt[Math.floor(Math.random()*filt.length)];
 	    obj1=evil[0];
 		obj1c=evil[1];
 		evil2=filt[Math.floor(Math.random()*filt.length)];
 		obj2=evil2[0];
 		obj2c=evil2[1];
-		if (obj2c===1&&obj1c===2||obj1c===2||obj2c===1){return [obj1, obj2, obj1c, obj2c]}
-	} while (obj2===obj1 || obj2c===obj1c || filt.length===0 && (done.includes([obj1,obj2]) || done.includes([obj2,obj1])));
+		if (obj2c==1&&obj1c==2||obj1c===2||obj2c===1){return [obj1, obj2, obj1c, obj2c]}
+		done.forEach(p=>{
+			if (p[0]==obj1 && p[1]==obj2 || p[0]==obj2 && p[1]==obj1){
+				equ=1;                        
+			} else {
+				equ=0;
+			}
+		});
+	} while (obj2==obj1 || obj2c==obj1c || filt.length==0 || equ==1);
 	max=max*Math.random()
 	return [obj1, obj2, obj1c, obj2c];
 	
