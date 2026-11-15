@@ -167,8 +167,6 @@ function pickobjs(diff){
 		obj2c=evil2[1];
 		if (obj2c==1&&obj1c==2||obj1c===2||obj2c===1){return [obj1, obj2, obj1c, obj2c]}
 		done.forEach(p=>{
-			console.log(p[0],p[1],obj1,obj2);
-			console.log(p[0]==obj1 && p[1]==obj2 || p[0]==obj2 && p[1]==obj1);
 			if (p[0]==obj1 && p[1]==obj2 || p[0]==obj2 && p[1]==obj1){
 				equ=1;
 			}
