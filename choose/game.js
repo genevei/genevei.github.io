@@ -7,6 +7,7 @@ const ctx=cnv.getContext("2d");
 let nams=new Map();
 var mousex=0;
 var mousey=0;
+let done=[];
 let objs1="";
 let objs2="";
 let objs1c=0;
@@ -163,7 +164,7 @@ function pickobjs(diff){
 		obj2=evil2[0];
 		obj2c=evil2[1];
 		if (obj2c===1&&obj1c===2||obj1c===2||obj2c===1){return [obj1, obj2, obj1c, obj2c]}
-	} while (obj2===obj1 || obj2c===obj1c || filt.length===0);
+	} while (obj2===obj1 || obj2c===obj1c || filt.length===0 && (done.includes([obj1,obj2]) || done.includes([obj2,obj1])));
 	max=max*Math.random()
 	return [obj1, obj2, obj1c, obj2c];
 	
@@ -177,6 +178,7 @@ async function mained(){
 	obj2=p[1];
 	obj1c=p[2];
 	obj2c=p[3];
+	done.push([obj1,obj2]);
 }
 function choose(){
 	p=pickobjs(0.5);
@@ -184,6 +186,7 @@ function choose(){
 	obj2=p[1];
 	obj1c=p[2];
 	obj2c=p[3];
+	done.push([obj1,obj2]);
 }
 canvas.addEventListener("mousemove", function(e){
     const rect=canvas.getBoundingClientRect();
@@ -200,13 +203,15 @@ function findhov(){
 	}
 }
 canvas.addEventListener("click", function(e){
-	if (hovbox===0){
-		selct="obj1";
-	} else if (hovbox===1){
-        selct="obj2";
+	if (!trans){
+		if (hovbox===0){
+			selct="obj1";
+		} else if (hovbox===1){
+			selct="obj2";
+		}
+		hovbox=0;
+		reveal();
 	}
-	hovbox=0;
-	reveal();
 });
 function lose(){
 	loss=1;
@@ -286,7 +291,7 @@ function draw(){
 				objd=0;
 				orre=1;
 			}
-			if (transx===-1){
+			if (transx===-1 || (25*(transx-60)<=0 && transop==-1)){
 				transx=0;
 				transop=1;
 				trans=0;
